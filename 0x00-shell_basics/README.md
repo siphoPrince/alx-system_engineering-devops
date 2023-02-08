@@ -11,3 +11,4 @@ Return back to dir
 list all to boot
 filetype
 symbols
+copy into html
