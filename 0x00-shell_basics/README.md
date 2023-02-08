@@ -5,3 +5,4 @@ List all
 List all Ids and long Lists
 making directories
 moving files
+Deletion
