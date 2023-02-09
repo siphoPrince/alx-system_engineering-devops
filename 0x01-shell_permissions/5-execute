@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod 701 hello
+useradd /tmp/0x01-shell_permissions/hello
