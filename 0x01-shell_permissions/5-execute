@@ -1,2 +1,2 @@
 #!/bin/bash
-useradd /tmp/0x01-shell_permissions/hello
+chmod u+h hello
