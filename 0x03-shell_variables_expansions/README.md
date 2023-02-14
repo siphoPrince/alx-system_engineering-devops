@@ -1,1 +1,2 @@
 rm *
+hello user
