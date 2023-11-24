@@ -1,4 +1,4 @@
-# Install Flask using the package resource
+#!/usr/bin/pup
 
 # File: 1-install_a_package.pp
 
