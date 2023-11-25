@@ -1,5 +1,4 @@
 #!/usr/bin/env bash 
 # makining rsa key pair
 
-ssh-keygen -f ~/.ssh/school -b 4096 -N "betty"
-echo "RSA key pair created successfully!"
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/school -N "betty"
