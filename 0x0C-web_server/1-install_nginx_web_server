@@ -1,27 +1,6 @@
 #!/usr/bin/env bash
-
-# Update package list
+# files for Installing Nginx
 sudo apt-get -y update
-
-# Install Nginx
 sudo apt-get -y install nginx
-
-# Configure Nginx to listen on port 80
-sudo sed -i 's/\blisten 80\b/listen 80;/g' /etc/nginx/sites-available/default
-
-# Restart Nginx without using systemctl
-sudo service nginx restart
-
-# Create a simple HTML page with "Hello World!"
-echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
-
-# Display a message indicating the script execution is complete
-echo "Nginx installation and configuration complete."
-
-# Test with curl
-if curl -s http://localhost | grep -q "Hello World!"; then
-    echo "Test successful: Nginx is serving Hello World! at http://localhost."
-else
-    echo "Test failed: Nginx is not serving the expected content."
-fi
-
+sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
+sudo service nginx start
