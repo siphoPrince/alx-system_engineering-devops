@@ -1,7 +1,35 @@
 #!/usr/bin/env bash
-# Installing Nginx using sed
-sudo apt-get -y update
-sudo apt-get -y install nginx
-sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
-sudo sed -i '53s|.*|\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n|' /etc/nginx/sites-enabled/default
+# configures a redirect
+
+# check if Nginx is installed
+if ! command -v nginx &> /dev/null; then
+    # install nginx
+    sudo apt-get update
+    sudo apt-get -y install nginx
+fi
+
+# adjust the firewall
+sudo ufw allow 'Nginx HTTP'
+
+# create directory and index.html for the redirect
+sudo mkdir -p /etc/nginx/html
+sudo tee /etc/nginx/html/index.html > /dev/null <<EOF
+Hello World!
+EOF
+
+# configure Nginx for redirection
+sudo tee /etc/nginx/sites-available/default > /dev/null <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /etc/nginx/html;
+    index index.html index.htm;
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}
+EOF
+
 sudo service nginx restart
+
