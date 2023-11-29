@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
-# Installing Nginx
-sudo apt-get -y update
-sudo apt-get -y install nginx
-sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
-sudo sed -i '/server_name _;/a \\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n'/etc/nginx/sites-enabled/default
+
+# Update the package list
+sudo apt-get update
+
+# Install Nginx
+sudo apt-get install -y nginx
+
+# Set up a custom index page with "Hello World!"
+echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+
+# Configure Nginx to redirect a specific endpoint (/redirect_me to https://sipho.tech)
+redirect_config="server_name _;\n\trewrite ^\/redirect_me https:\/\/sipho.tech permanent;"
+sudo sed -i "s/server_name _;/$redirect_config/" /etc/nginx/sites-enabled/default
+
+# Restart Nginx to apply the changes
 sudo service nginx restart
+
