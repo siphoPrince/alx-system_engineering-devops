@@ -2,5 +2,7 @@
 # files for Installing Nginx
 sudo apt-get -y update
 sudo apt-get -y install nginx
-sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
-sudo service nginx start
+echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+sudo sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
+sudo /etc/init.d/nginx restart
+response=$(curl -s http://localhost)
