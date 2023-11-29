@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Update the package list
+sudo apt-get -y update
+
+# Install Nginx
+sudo apt-get -y install nginx
+
+# Create a custom HTML page for testing the redirection
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html > /dev/null
+
+# Configure Nginx for redirection
+sudo sed -i '/server_name _;/a \\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n' /etc/nginx/sites-enabled/default
+
+# Restart Nginx to apply the changes
+sudo service nginx restart
+
