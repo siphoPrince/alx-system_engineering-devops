@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # debugging nginx port 80
-# Fix: Restart nginx and check its status
+# Fix: Change port in Nginx configuration, restart Nginx, and kill the nginx process
+sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
 sudo service nginx restart
-service nginx status | grep -q "not running" && echo " * nginx is not running"
+sudo pkill -o nginx
