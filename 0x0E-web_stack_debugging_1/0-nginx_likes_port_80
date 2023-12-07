@@ -2,5 +2,5 @@
 # Debugging script for Nginx port 80
 
 # Restart Nginx with sudo
-sudo nginx -t && sudo systemctl restart nginx
-
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo service nginx restart
