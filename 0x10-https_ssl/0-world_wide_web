@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-#subdomain www points to your load-balancer IP
+# Shows information about subdomains.
 
-subdomain()
-{
-    RECORD_TYPE=$(dig "$1" | awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]/{print $4}')
-    DEST=$(dig "$1" | awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]/{print $5}')
-    echo The subdomain "$2" is a "$RECORD_TYPE" record and points to "$DEST"
+setting_domain() {
+	local domain="$1"
+	local subdomain="$2"
+    
+	if [ -z "$subdomain" ]; then
+		subdomains=("www" "lb-01" "web-01" "web-02")
+	else
+		subdomains="$2"
+	fi
+
+	for s in "${subdomains[@]}"; do
+		rt=$(dig "$s.$domain" | awk '/ANSWER SECTION/ { getline; print $4 }')
+		dest=$(dig "$s.$domain" | awk '/ANSWER SECTION/ { getline; print $5 }')
+		echo "The subdomain $s is a $rt record and points to $dest"
+	done
 }
 
-if [ "$2" ]
-then
-    subdomain "$2.$1" "$2"
-else
-    subdomain "www.$1" www
-    subdomain "lb-01.$1" lb-01
-    subdomain "web-01.$1" web-01
-    subdomain "web-02.$1" web-02
-fi
+setting_domain "$1" "$2"
