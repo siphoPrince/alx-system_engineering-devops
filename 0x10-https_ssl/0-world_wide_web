@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
-# Shows information about subdomains.
 
-setting_domain() {
-	local domain="$1"
-	local subdomain="$2"
-    
-	if [ -z "$subdomain" ]; then
-		subdomains=("www" "lb-01" "web-01" "web-02")
-	else
-		subdomains="$2"
-	fi
-
-	for s in "${subdomains[@]}"; do
-		rt=$(dig "$s.$domain" | awk '/ANSWER SECTION/ { getline; print $4 }')
-		dest=$(dig "$s.$domain" | awk '/ANSWER SECTION/ { getline; print $5 }')
-		echo "The subdomain $s is a $rt record and points to $dest"
-	done
+# Function to display information about a subdomain
+display_subdomain_info() {
+    dig_output=$(dig "$1" | grep -A1 'ANSWER SECTION:')
+    record_type=$(echo "${dig_output}" | awk '{print $4}')
+    destination=$(echo "${dig_output}" | awk '{print $5}')
+    echo "The subdomain $2 is a $record_type record and points to $destination"
 }
 
-setting_domain "$1" "$2"
+# Main script
+if [ "$#" -eq 2 ]; then
+    display_subdomain_info "$2.$1" "$2"
+else
+    display_subdomain_info "www.$1" "www"
+    display_subdomain_info "lb-01.$1" "lb-01"
+    display_subdomain_info "web-01.$1" "web-01"
+    display_subdomain_info "web-02.$1" "web-02"
+fi
