@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# debugging nginx port 80
+# Fix: Change port in Nginx configuration, restart Nginx, and kill the nginx process
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+service nginx restart
+pkill -o nginx
