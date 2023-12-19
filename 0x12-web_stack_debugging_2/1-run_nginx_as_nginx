@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
-#Run Nginx as Nginx
+#instaling as nginx
+
+# Stop Apache (if it's running)
 sudo pkill apache2
-sleep 2
-sudo chmod 777 /etc/nginx/nginx.conf
-sed -i 's/80/8080/g' /etc/nginx/sites-enabled/default
-sudo -u nginx nginx
+
+# Make a backup of nginx.conf
+sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+
+# Modify nginx.conf
+sudo sed -i 's/80/8080/g' /etc/nginx/sites-enabled/default
+
+# Restart Nginx
+sudo systemctl restart nginx
+
+# Display Nginx processes
+ps auxff | grep ngin[x]
+
