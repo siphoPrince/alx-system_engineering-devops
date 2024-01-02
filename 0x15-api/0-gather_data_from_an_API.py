@@ -1,48 +1,49 @@
 #!/usr/bin/python3
 '''
-getting files from employee todo
+printing a todo
 '''
 
 import requests
 import sys
 
-def get_employee_todo_progress(employee_id):
-    # API endpoints
-    user_url = f'https://jsonplaceholder.typicode.com/users/{employee_id}'
-    todos_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
-
-    # Get user information
-    user_response = requests.get(user_url)
-    if user_response.status_code != 200:
-        print(f"Failed to retrieve user information. Status code: {user_response.status_code}")
-        return
-
+def get_employee_data(employee_id):
+    """
+    Get employee data and TODO list data from the REST API.
+    """
+    base_url = "https://jsonplaceholder.typicode.com"
+    
+    user_response = requests.get(f"{base_url}/users/{employee_id}")
     user_data = user_response.json()
-    employee_name = user_data.get("name")
+    employee_name = user_data.get('name')
 
-    # Get TODO list for the user
-    todos_response = requests.get(todos_url)
-    if todos_response.status_code != 200:
-        print(f"Failed to retrieve TODO list. Status code: {todos_response.status_code}")
-        return
+    todo_response = requests.get(f"{base_url}/todos?userId={employee_id}")
+    todo_data = todo_response.json()
 
-    todos_data = todos_response.json()
+    return employee_name, todo_data
 
-    # Calculate progress
-    number_of_done_tasks = sum(1 for task in todos_data if task.get('completed'))
-    total_number_of_tasks = len(todos_data)
+def display_todo_progress(employee_name, todo_data):
+    """
+    Display employee's TODO list progress.
+    """
+    total_tasks = len(todo_data)
+    completed_tasks = sum(task['completed'] for task in todo_data)
 
-    # Display information
-    print(f'Employee {employee_name} is done with tasks({number_of_done_tasks}/{total_number_of_tasks}):')
-    for task in todos_data:
-        if task.get('completed'):
-            print(f'\t{task.get("title")}')
+    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
 
-if __name__ == '__main__':
-    # Check if the correct number of command-line arguments is provided
+    for task in todo_data:
+        if task['completed']:
+            print(f"\t{task['title']}")
+
+if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python script.py <employee_id>")
-    else:
-        employee_id = sys.argv[1]
-        get_employee_todo_progress(employee_id)
+        print("Usage: python3 script.py <employee_id>")
+        sys.exit(1)
+
+    employee_id = int(sys.argv[1])
+
+    try:
+        employee_name, todo_data = get_employee_data(employee_id)
+        display_todo_progress(employee_name, todo_data)
+    except requests.RequestException as e:
+        print(f"Error: {e}")
 
