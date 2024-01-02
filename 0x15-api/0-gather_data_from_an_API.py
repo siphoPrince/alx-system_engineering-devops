@@ -30,8 +30,7 @@ def display_todo_progress(employee_name, todo_data):
     total_tasks = len(todo_data)
     completed_tasks = sum(task['completed'] for task in todo_data)
 
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}\
-            /{total_tasks}):")
+    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
 
     for task in todo_data:
         if task['completed']:
