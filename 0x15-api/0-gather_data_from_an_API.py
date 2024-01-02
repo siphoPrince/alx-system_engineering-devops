@@ -1,35 +1,36 @@
 #!/usr/bin/python3
-'''
-return a TODO list progress.
-'''
+"""Accessing a employee todo lists"""
 
 import requests
 import sys
 
-def get_employee_todo_progress(employee_id):
-    """ API endpoints"""
-    user_url = f'https://jsonplaceholder.typicode.com/users/{employee_id}'
-    todos_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
+if __name__ == '__main__':
+    emp_id = sys.argv[1]
 
-    user_response = requests.get(user_url)
-    if user_response.status_code != 200:
-        print(f"Failed to retrieve user information. Status code: {user_response.status_code}")
-        return
+    base_url = "https://jsonplaceholder.typicode.com/users"
+    emp_url = base_url + "/" + emp_id
 
-    user_data = user_response.json()
-    employee_name = user_data.get("name")
+    # Fetch employee details
+    emp_resp = requests.get(emp_url)
+    emp_name = emp_resp.json().get('name')
 
-    todos_response = requests.get(todos_url)
-    if todos_response.status_code != 200:
-        print(f"Failed to retrieve TODO list. Status code: {todos_response.status_code}")
-        return
+    # Fetch employee tasks
+    todo_url = emp_url + "/todos"
+    todo_resp = requests.get(todo_url)
+    tasks = todo_resp.json()
 
-    todos_data = todos_response.json()
+    comp_tasks_count = 0
+    comp_tasks_list = []
 
-    number_of_done_tasks = sum(1 for task in todos_data if task.get('completed'))
-    total_number_of_tasks = len(todos_data)
+    # Filter completed tasks
+    for t in tasks:
+        if t.get('completed'):
+            comp_tasks_list.append(t)
+            comp_tasks_count += 1
 
-    print(f'Employee {employee_name} is done with tasks({number_of_done_tasks}/{total_number_of_tasks}):')
-    for task in todos_data:
-        if task.get('completed'):
-            print(f'\t{task.get("title")}')
+    # Print employee's completed tasks
+    print("Employee {} has completed tasks ({}/{}):"
+          .format(emp_name, comp_tasks_count, len(tasks)))
+
+    for t in comp_tasks_list:
+        print("\t {}".format(t.get('title')))
