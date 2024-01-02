@@ -1,48 +1,33 @@
 #!/usr/bin/python3
 '''
-return a TODO list progress.
+Retrieves and displays TODO list progress for a given employee ID.
 '''
 
-import requests
-import sys
-
-def get_employee_todo_progress(employee_id):
-    # API endpoints
-    user_url = f'https://jsonplaceholder.typicode.com/users/{employee_id}'
-    todos_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
-
-    # Get user information
-    user_response = requests.get(user_url)
-    if user_response.status_code != 200:
-        print(f"Failed to retrieve user information. Status code: {user_response.status_code}")
-        return
-
-    user_data = user_response.json()
-    employee_name = user_data.get("name")
-
-    # Get TODO list for the user
-    todos_response = requests.get(todos_url)
-    if todos_response.status_code != 200:
-        print(f"Failed to retrieve TODO list. Status code: {todos_response.status_code}")
-        return
-
-    todos_data = todos_response.json()
-
-    # Calculate progress
-    number_of_done_tasks = sum(1 for task in todos_data if task.get('completed'))
-    total_number_of_tasks = len(todos_data)
-
-    # Display information
-    print(f'Employee {employee_name} is done with tasks({number_of_done_tasks}/{total_number_of_tasks}):')
-    for task in todos_data:
-        if task.get('completed'):
-            print(f'\t{task.get("title")}')
-
 if __name__ == '__main__':
-    # Check if the correct number of command-line arguments is provided
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <employee_id>")
-    else:
-        employee_id = sys.argv[1]
-        get_employee_todo_progress(employee_id)
+    import requests
+    import sys
 
+    completed_tasks_count = 0
+    completed_task_titles = []
+    employee_id = sys.argv[1]
+
+    user_info_url = ('https://jsonplaceholder.typicode.com/users/{}'
+            .format(employee_id))
+    user_info = requests.get(user_info_url).json()
+    employee_name = user_info.get("username")
+
+    todo_url = ('https://jsonplaceholder.typicode.com/todos?userId={}'
+            .format(employee_id))
+    todo = requests.get(todo_url).json()
+
+    for task in todo:
+        if task.get('completed'):
+            completed_task_titles.append(task.get('title'))
+            completed_tasks_count += 1
+
+    total_tasks_count = len(todo)
+
+    print('Employee {} is done with tasks({}/{}):'.
+          format(employee_name, completed_tasks_count, total_tasks_count))
+    for title in completed_task_titles:
+        print('\t{}'.format(title))
