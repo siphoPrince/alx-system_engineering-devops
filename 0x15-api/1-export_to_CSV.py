@@ -38,7 +38,6 @@ def export_to_csv(employee_id, employee_name, todo_data):
         for task in todo_data:
             csv_writer.writerow([employee_id, employee_name, str(task['completed']), task['title']])
 
-    print(f"{csv_filename}")
 
 
 if __name__ == "__main__":
@@ -51,6 +50,5 @@ if __name__ == "__main__":
     try:
         employee_name, todo_data = get_employee_data(employee_id)
         export_to_csv(employee_id, employee_name, todo_data)
-        print(f"{employee_id}.csv")
     except requests.RequestException as e:
         print(f"Error: {e}")
