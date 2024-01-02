@@ -3,8 +3,9 @@
 printing a todo
 '''
 
-import requests
 import json
+import requests
+
 
 def get_employee_data(employee_id):
     """
@@ -21,6 +22,7 @@ def get_employee_data(employee_id):
 
     return employee_name, todo_data
 
+
 def export_to_json(data, filename):
     """
     Export data to JSON file.
@@ -28,6 +30,7 @@ def export_to_json(data, filename):
     with open(filename, 'w') as json_file:
         json.dump(data, json_file, indent=2)
     print(f"Data exported to {filename}")
+
 
 if __name__ == "__main__":
     all_employee_data = {}
