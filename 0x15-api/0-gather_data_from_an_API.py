@@ -6,12 +6,13 @@ printing a todo
 import requests
 import sys
 
+
 def get_employee_data(employee_id):
     """
     Get employee data and TODO list data from the REST API.
     """
     base_url = "https://jsonplaceholder.typicode.com"
-    
+
     user_response = requests.get(f"{base_url}/users/{employee_id}")
     user_data = user_response.json()
     employee_name = user_data.get('name')
@@ -21,6 +22,7 @@ def get_employee_data(employee_id):
 
     return employee_name, todo_data
 
+
 def display_todo_progress(employee_name, todo_data):
     """
     Display employee's TODO list progress.
@@ -28,11 +30,13 @@ def display_todo_progress(employee_name, todo_data):
     total_tasks = len(todo_data)
     completed_tasks = sum(task['completed'] for task in todo_data)
 
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
+    print(f"Employee {employee_name} is done with tasks({completed_tasks}\
+            /{total_tasks}):")
 
     for task in todo_data:
         if task['completed']:
             print(f"\t{task['title']}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -46,4 +50,3 @@ if __name__ == "__main__":
         display_todo_progress(employee_name, todo_data)
     except requests.RequestException as e:
         print(f"Error: {e}")
-
