@@ -35,7 +35,7 @@ def export_to_csv(employee_id, employee_name, todo_data):
     """
     Export TODO list data to CSV file.
     """
-    csv_filename = f"{employee_id}.csv"
+    csv_filename = f"{employee_name.replace(' ', '_').lower()}_todo.csv"
 
     try:
         with open(csv_filename, 'w', newline='') as csv_file:
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     try:
         employee_name, todo_data = get_employee_data(employee_id)
         export_to_csv(employee_id, employee_name, todo_data)
-        print(f"{employee_id}.csv: OK")
+        print(f"{employee_name.replace(' ', '_').lower()}_todo.csv: OK")
     except requests.RequestException as e:
         print(f"Error: Unable to fetch data for employee ID {employee_id}. Please check the employee ID and try again.")
 
