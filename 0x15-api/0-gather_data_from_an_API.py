@@ -1,8 +1,3 @@
-#!/usr/bin/python3
-'''
-return a TODO list progress.
-'''
-
 import requests
 import sys
 
@@ -45,3 +40,4 @@ if __name__ == '__main__':
     else:
         employee_id = sys.argv[1]
         get_employee_todo_progress(employee_id)
+
