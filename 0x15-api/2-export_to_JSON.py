@@ -2,10 +2,10 @@
 '''
 printing a todo
 '''
-
+import json
 import requests
 import sys
-import json
+
 
 def get_employee_data(employee_id):
     """
@@ -22,6 +22,7 @@ def get_employee_data(employee_id):
 
     return employee_name, todo_data
 
+
 def display_todo_progress(employee_name, todo_data):
     """
     Display employee's TODO list progress.
@@ -35,6 +36,7 @@ def display_todo_progress(employee_name, todo_data):
         if task['completed']:
             print(f"\t{task['title']}")
 
+
 def export_to_json(employee_id, todo_data):
     """
     Export TODO data to JSON file.
@@ -43,6 +45,7 @@ def export_to_json(employee_id, todo_data):
     with open(filename, 'w') as json_file:
         json.dump({employee_id: todo_data}, json_file, indent=2)
     print(f"Data exported to {filename}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -57,4 +60,3 @@ if __name__ == "__main__":
         export_to_json(employee_id, todo_data)
     except requests.RequestException as e:
         print(f"Error: {e}")
-
