@@ -1,51 +1,39 @@
 #!/usr/bin/python3
-'''returns information about his/her TODO list progress.
-'''
-import json
+"""
+Scripting that, using a given REST API, for a given employee ID,
+returns information about his/her TODO list progress.
+"""
+
 import requests
-import sys
-
-
-def employee_data(_id):
-    """
-    Get employee data.
-    """
-    _url = "https://jsonplaceholder.typicode.com"
-
-    user_resp = requests.get(f"{_url}/users/{_id}")
-    user_data = user_resp.json()
-    _name = user_data.get('name')
-
-    todo_results = requests.get(f"{_url}/todos?userId={_id}")
-    todo_data = todo_results.json()
-
-    return _name, todo_data
-
-
-def display_todo(_name, todo_data):
-    """
-    Display employee's TODO list.
-    """
-    t_tasks = len(todo_data)
-    c_tasks = sum(task['completed'] for task in todo_data)
-
-    print("Employee {} is done with tasks({}/{}):".
-          format(_name, c_tasks, t_tasks))
-
-    for task in todo_data:
-        if task['completed']:
-            print(f"\t{task['title']}")
-
+from sys import argv
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 script.py <employee_id>")
-        sys.exit(1)
+    if len(argv) != 2 or not argv[1].isdigit():
+        print("Usage: {} employee_id".format(argv[0]))
+        exit(1)
 
-    _id = int(sys.argv[1])
+    employee_id = int(argv[1])
+
+    base_url = "https://jsonplaceholder.typicode.com"
+    user_url = "{}/users/{}".format(base_url, employee_id)
+    todos_url = "{}/todos?userId={}".format(base_url, employee_id)
 
     try:
-        _name, todo_data = employee_data(_id)
-        display_todo(_name, todo_data)
-    except requests.RequestException as e:
-        print(f"Error: {e}")
+        user_response = requests.get(user_url)
+        todos_response = requests.get(todos_url)
+        user_data = user_response.json()
+        todos_data = todos_response.json()
+
+        employee_name = user_data.get("name")
+        total_tasks = len(todos_data)
+        done_tasks = [task for task in todos_data if task.get("completed")]
+
+        print("Employee {} is done with tasks({}/{}):".format(
+            employee_name, len(done_tasks), total_tasks))
+
+        for task in done_tasks:
+            print("\t {}".format(task.get("title")))
+
+    except requests.exceptions.RequestException as e:
+        print("Error: {}".format(e))
+        exit(1)
