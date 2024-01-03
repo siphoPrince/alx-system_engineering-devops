@@ -7,45 +7,39 @@ import requests
 import sys
 
 
-def get_employee_data(employee_id):
-    """
-    Get employee data and TODO list data from the REST API.
-    """
-    base_url = "https://jsonplaceholder.typicode.com"
-
-    user_response = requests.get(f"{base_url}/users/{employee_id}")
-    user_data = user_response.json()
-    employee_name = user_data.get('name')
-
-    todo_response = requests.get(f"{base_url}/todos?userId={employee_id}")
-    todo_data = todo_response.json()
-
-    return employee_name, todo_data
-
-
-def display_todo_progress(employee_name, todo_data):
-    """
-    Display employee's TODO list progress.
-    """
-    total_tasks = len(todo_data)
-    completed_tasks = sum(task['completed'] for task in todo_data)
-
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
-
-    for task in todo_data:
-        if task['completed']:
-            print(f"\t{task['title']}")
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 script.py <employee_id>")
+if __name__ == '__main__':
+    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
+        print("Usage: python script.py <employee_id>")
         sys.exit(1)
 
     employee_id = int(sys.argv[1])
 
+    # Fetch employee data using the provided REST API
+    base_url = "https://jsonplaceholder.typicode.com"
+    user_url = f"{base_url}/users/{employee_id}"
+    todo_url = f"{base_url}/todos?userId={employee_id}"
+
     try:
-        employee_name, todo_data = get_employee_data(employee_id)
-        display_todo_progress(employee_name, todo_data)
+        user_response = requests.get(user_url)
+        todo_response = requests.get(todo_url)
+
+        user_data = user_response.json()
+        todo_data = todo_response.json()
+
+        # Extract relevant information
+        employee_name = user_data['name']
+        done_tasks = [task['title'] for task in todo_data if task['completed']]
+        total_tasks = len(todo_data)
+        done_tasks_count = len(done_tasks)
+
+        # Display the output
+        print(f"Employee {employee_name} is done with tasks ({done_tasks_count}/{total_tasks}):")
+        print(f"{employee_name}: {done_tasks_count}/{total_tasks}")
+
+        for task_title in done_tasks:
+            print(f"\t{task_title}")
+
     except requests.RequestException as e:
         print(f"Error: {e}")
+        sys.exit(1)
+
