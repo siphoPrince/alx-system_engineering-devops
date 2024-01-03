@@ -1,51 +1,51 @@
 #!/usr/bin/python3
+'''returns information about his/her TODO list progress.
 '''
-printing a todo
-'''
-
+import json
 import requests
 import sys
 
-def get_employee_todo_progress(employee_id):
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_url = f"{base_url}/users/{employee_id}"
-    todos_url = f"{base_url}/todos?userId={employee_id}"
 
-    try:
-        # Get user data
-        user_response = requests.get(user_url)
-        user_data = user_response.json()
-        employee_name = user_data.get('name')
+def employee_data(_id):
+    """
+    Get employee data.
+    """
+    _url = "https://jsonplaceholder.typicode.com"
 
-        # Get TODO list data
-        todos_response = requests.get(todos_url)
-        todos_data = todos_response.json()
+    user_resp = requests.get(f"{_url}/users/{_id}")
+    user_data = user_resp.json()
+    _name = user_data.get('name')
 
-        # Count completed and total tasks
-        total_tasks = len(todos_data)
-        completed_tasks = sum(task['completed'] for task in todos_data)
+    todo_results = requests.get(f"{_url}/todos?userId={_id}")
+    todo_data = todo_results.json()
 
-        # Display progress information
-        print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
+    return _name, todo_data
 
-        # Display completed tasks
-        for task in todos_data:
-            if task['completed']:
-                print(f"\t{task['title']}")
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
+def display_todo(_name, todo_data):
+    """
+    Display employee's TODO list.
+    """
+    t_tasks = len(todo_data)
+    c_tasks = sum(task['completed'] for task in todo_data)
+
+    print("Employee {} is done with tasks({}/{}):".
+          format(_name, c_tasks, t_tasks))
+
+    for task in todo_data:
+        if task['completed']:
+            print(f"\t{task['title']}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python script.py <employee_id>")
+        print("Usage: python3 script.py <employee_id>")
         sys.exit(1)
 
-    employee_id = sys.argv[1]
+    _id = int(sys.argv[1])
 
     try:
-        employee_id = int(employee_id)
-    except ValueError:
-        pass  # Do nothing or print a custom message if desired
-
-    get_employee_todo_progress(employee_id)
+        _name, todo_data = employee_data(_id)
+        display_todo(_name, todo_data)
+    except requests.RequestException as e:
+        print(f"Error: {e}")
