@@ -1,9 +1,13 @@
 #!/usr/bin/python3
+<<<<<<< HEAD
 """Retrieve employee TODO list progress from a REST API"""
+=======
+>>>>>>> edaf382d8bdc65e2da1526a2faf985798b7f469c
 
 import requests
 import sys
 
+<<<<<<< HEAD
 def get_employee_todo_progress(employee_id):
     base_url = "https://jsonplaceholder.typicode.com/users"
     employee_url = f"{base_url}/{employee_id}"
@@ -48,3 +52,45 @@ if __name__ == '__main__':
         sys.exit(1)
 
     get_employee_todo_progress(employee_id)
+=======
+def get_employee_data(employee_id):
+    """
+    Get employee data and TODO list data from the REST API.
+    """
+    base_url = "https://jsonplaceholder.typicode.com"
+
+    user_response = requests.get(f"{base_url}/users/{employee_id}")
+    user_data = user_response.json()
+    employee_name = user_data.get('name')
+
+    todo_response = requests.get(f"{base_url}/todos?userId={employee_id}")
+    todo_data = todo_response.json()
+
+    return employee_name, todo_data
+
+def display_todo_progress(employee_name, todo_data):
+    """
+    Display employee's TODO list progress.
+    """
+    total_tasks = len(todo_data)
+    completed_tasks = sum(task['completed'] for task in todo_data)
+
+    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
+
+    for task in todo_data:
+        if task['completed']:
+            print(f"\t{task['title']}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python3 script.py <employee_id>")
+        sys.exit(1)
+
+    employee_id = int(sys.argv[1])
+
+    try:
+        employee_name, todo_data = get_employee_data(employee_id)
+        display_todo_progress(employee_name, todo_data)
+    except requests.RequestException as e:
+        print(f"Error: {e}")
+>>>>>>> edaf382d8bdc65e2da1526a2faf985798b7f469c
