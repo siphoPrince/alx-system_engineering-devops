@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-#!/usr/bin/python3
 """Exporting all employees to JSON format."""
 import json
 import requests
