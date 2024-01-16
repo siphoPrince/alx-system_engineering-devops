@@ -9,28 +9,22 @@ or a given subreddit
 import requests
 
 def number_of_subscribers(subreddit):
-    '''
-    Return the number of subreddit subscribers
-    '''
-    url = f'https://www.reddit.com/r/{subreddit}/about.json'
-    user_agent = 'MyApi/0.0.2'
+    """Returning the number of subscribers for a given subreddit"""
+    import requests
 
-    req = requests.get(url)
-
-    if req.statius_code == 403:
-        print("Error 403: Access forbidden. Check subreddit restrictions.")
-        print(f"Response content: {req.content.decode('utf-8')}")
-        return 0
-
-    if req.status_code != 200:
-        print(f"Error: Unable to fetch data. Status code: {req.status_code}")
-        return 0
-
+    header = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+            AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 \
+                Safari/537.36 Edg/119.0.0.0"
+    }
+    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
     try:
-        data = req.json()
-        subscribers = data['data']['subscribers']
-        return subscribers
-    except KeyError:
-
-        print("Error: Unable to retrieve subscribers from JSON response.")
+        response = requests.get(url, headers=header, allow_redirects=False)
+        if response.status_code == 200:
+            data = response.json()
+            subscribers = data.get('data').get('subscribers')
+            return subscribers
+        else:
+            return 0
+    except Exception:
         return 0
