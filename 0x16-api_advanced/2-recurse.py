@@ -20,7 +20,7 @@ def recurse(subreddit, hot_list=[], after=None):
     if after:
         url += f'&after={after}'
 
-    headers = {'User-Agent': 'chrome 120.0.6099.217'}
+    headers = {'User-Agent': 'MyApi/0.2'}
 
     req = requests.get(url, headers=headers, allow_redirects=False)
 
