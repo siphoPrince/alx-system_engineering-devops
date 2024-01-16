@@ -11,11 +11,11 @@ def top_ten(subreddit):
     """
     Print the titles of the first 10 hot posts for a given subreddit.
     """
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=10'
 
     headers = {'User-Agent': 'MyApi/0.1'}
 
-    req = requests.get(url, headers=headers, allow_redirects=False)
+    req = requests.get('https://www.reddit.com/r/{subreddit}/hot.json?limit=10',
+            headers=headers, allow_redirects=False)
 
     if req.status_code == 302:
         print("Invalid subreddit. Please provide a valid subreddit.")
