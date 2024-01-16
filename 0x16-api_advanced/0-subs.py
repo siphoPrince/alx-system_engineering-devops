@@ -5,9 +5,7 @@ number of subscribers (not active users, total subscribers)
 or a given subreddit
 '''
 
-import requests
 
-# Inside 0-subs.py
 import requests
 
 def number_of_subscribers(subreddit):
@@ -15,10 +13,11 @@ def number_of_subscribers(subreddit):
     Return the number of subreddit subscribers
     '''
     url = f'https://www.reddit.com/r/{subreddit}/about.json'
+    user_agent = 'MyApi/0.0.2'
 
     req = requests.get(url)
 
-    if req.status_code == 403:
+    if req.statius_code == 403:
         print("Error 403: Access forbidden. Check subreddit restrictions.")
         print(f"Response content: {req.content.decode('utf-8')}")
         return 0
@@ -32,6 +31,6 @@ def number_of_subscribers(subreddit):
         subscribers = data['data']['subscribers']
         return subscribers
     except KeyError:
-        # Handle the case where the structure of the JSON response has changed
+
         print("Error: Unable to retrieve subscribers from JSON response.")
         return 0
