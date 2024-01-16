@@ -20,7 +20,7 @@ def recurse(subreddit, hot_list=[], after=None):
     if after:
         url += f'&after={after}'
 
-    headers = {'User-Agent': 'Mozilla/5.0'}  # Use a valid user-agent
+    headers = {'User-Agent': 'chrome 120.0.6099.217'}
 
     req = requests.get(url, headers=headers, allow_redirects=False)
 
@@ -41,7 +41,6 @@ def recurse(subreddit, hot_list=[], after=None):
             title = post['data']['title']
             hot_list.append(title)
 
-        # Recursively call the function with the updated 'after' parameter
         if after:
             recurse(subreddit, hot_list, after)
 

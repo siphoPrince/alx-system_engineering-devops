@@ -13,7 +13,7 @@ def top_ten(subreddit):
     """
     url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=10'
 
-    headers = {'User-Agent': 'Mozilla/5.0'}  # Use a valid user-agent
+    headers = {'User-Agent': 'MyApi/0.1'}
 
     req = requests.get(url, headers=headers, allow_redirects=False)
 
