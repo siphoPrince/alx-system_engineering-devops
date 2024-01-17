@@ -1,14 +1,2 @@
-# 0-strace_is_your_friend.pp
-
-# Replace <issue_details> with the actual issue you identified using strace
-
-file { '/var/www/html/wp-includes/class-wp-locale_backup.php':
-  ensure => 'file',
-  source => '/var/www/html/wp-includes/class-wp-locale.php',
-}
-
-file { '/var/www/html/wp-includes/class-wp-locale.php':
-  ensure  => 'absent',
-  require => File['/var/www/html/wp-includes/class-wp-locale_backup.php'],
-}
-
+# Typo in Wordpress config file fix
+exec { '/usr/bin/env sed -i "s/phpp/php/g" /var/www/html/wp-settings.php': }
