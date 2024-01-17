@@ -1,12 +1,11 @@
 # Typo in Wordpress config file fix
-file {'.phpp':
+file { '/var/www/html/wp-includes/class-wp-locale_backup.php':
   ensure => 'file',
-  path   => '/var/www/html/wp-includes/class-wp-locale.phpp',
   source => '/var/www/html/wp-includes/class-wp-locale.php',
 }
 
-file {'.php':
+file { '/var/www/html/wp-includes/class-wp-locale.php':
   ensure  => 'absent',
-  path    => '/var/www/html/wp-includes/class-wp-locale.php',
-  require => FILE['.phpp'],
+  require => File['/var/www/html/wp-includes/class-wp-locale_backup.php'],
 }
+
