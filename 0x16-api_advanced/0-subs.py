@@ -9,11 +9,9 @@ or a given subreddit
 import requests
 
 def number_of_subscribers(subreddit):
-    """Returning the number of subscribers for a given subreddit"""
-    import requests
-
+    """Returning of the number of subscribers for a given subreddit"""
     header = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 \
                 Safari/537.36 Edg/119.0.0.0"
     }
