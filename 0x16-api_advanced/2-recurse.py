@@ -9,42 +9,26 @@ import requests
 
 
 def recurse(subreddit, hot_list=[], after=None):
-    """
-    Recursively fetch and return the titles of
-    all hot articles for a given subreddit.
-    """
-    if not subreddit:
-        return None
-
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=100'
+    """Returning the list of a hot posts titles for a given subreddit"""
+    header = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+            AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 \
+                Safari/537.36 Edg/119.0.0.0"
+    }
+    url = 'https://www.reddit.com/r/{}/hot.json?limit=100'.format(subreddit)
     if after:
-        url += f'&after={after}'
-
-    headers = {'User-Agent': 'MyApi/0.2'}
-
-    req = requests.get(url, headers=headers, allow_redirects=False)
-
-    if req.status_code == 302:
-        print("Invalid subreddit. Please provide a valid subreddit.")
-        return None
-
-    if req.status_code != 200:
-        print(f"Error: Unable to fetch data. Status code: {req.status_code}")
-        return None
-
+        url = 'https://www.reddit.com/r/{}/hot.json?limit=100&after={}'.format(
+            subreddit, after)
     try:
-        data = req.json()
-        posts = data['data']['children']
-        after = data['data']['after']
-
-        for post in posts:
-            title = post['data']['title']
+        response = requests.get(url, headers=header, allow_redirects=False)
+        data = response.json()
+        children = data.get('data').get('children')
+        for post in children:
+            title = post.get('data').get('title')
             hot_list.append(title)
-
+        after = data.get('data').get('after')
         if after:
             recurse(subreddit, hot_list, after)
-
-    except KeyError:
-        print("Error: Unable to retrieve post titles from JSON response.")
-
-    return hot_list
+        return hot_list
+    except Exception:
+        return None
