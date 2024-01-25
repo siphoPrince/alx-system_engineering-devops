@@ -1,24 +1,25 @@
 server {
     listen 80;
-    server_name _;
+    listen [::]:80 default_server;
+    
+    server_name 107.22.143.112;
+
+    add_header X-Served-By 236725-web-01;
 
     location /airbnb-onepage/ {
-        proxy_pass http://107.22.143.112:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+        proxy_pass http://107.22.143.112:5000/airbnb-onepage/;
+            }
 
-    error_page 404 /404.html;
-    location = /404.html {
-        root /usr/share/nginx/html;
+    error_page 404/404.html;
+    location/404 {
+        root /var/www/html;
         internal;
     }
+    
+    root /var/www/example.com;
+        index index.html;
 
-    error_page 500 502 503 504 /50x.html;
-    location = /50x.html {
-        root /usr/share/nginx/html;
-        internal;
-    }
+        location / {
+                try_files $uri $uri/ =404;
+        }
 }
